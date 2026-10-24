@@ -1,0 +1,81 @@
+[
+ {
+  "card": "cards/01_title.png",
+  "secs": 6
+ },
+ {
+  "card": "cards/02_pipeline.png",
+  "secs": 8
+ },
+ {
+  "clip": "raw/S1_basic.mp4",
+  "ss": 3,
+  "to": 7,
+  "caption": "指示：赤い箱の前まで行って止まって"
+ },
+ {
+  "clip": "raw/S1_basic.mp4",
+  "ss": 113,
+  "to": 133.5,
+  "caption": "LLM推論 110秒（待機を省略） → 検証OK → 実行"
+ },
+ {
+  "clip": "raw/S2_detour.mp4",
+  "ss": 3,
+  "to": 7,
+  "caption": "指示：青い円柱の前まで行って"
+ },
+ {
+  "clip": "raw/S2_detour.mp4",
+  "ss": 82,
+  "to": 90,
+  "fontsize": 34,
+  "caption": "LLM推論 80秒（待機を省略） → Validator NG：禁止ゾーンを横切る → 再計画"
+ },
+ {
+  "clip": "raw/S2_detour.mp4",
+  "ss": 141,
+  "to": 149,
+  "fontsize": 34,
+  "caption": "再計画 60秒（待機を省略） → 迂回（経由点）の計画が検証OK"
+ },
+ {
+  "clip": "raw/S2_detour.mp4",
+  "ss": 149,
+  "to": 182,
+  "speed": 2.0,
+  "caption": "実行：禁止ゾーンを避けて到達"
+ },
+ {
+  "clip": "raw/S3_clarify.mp4",
+  "ss": 3,
+  "to": 7,
+  "caption": "指示：もう少し前に（曖昧）"
+ },
+ {
+  "clip": "raw/S3_clarify.mp4",
+  "ss": 93,
+  "to": 99,
+  "caption": "LLM推論 91秒（待機を省略） → 聞き返す"
+ },
+ {
+  "clip": "raw/S4_reject.mp4",
+  "ss": 3,
+  "to": 7,
+  "caption": "指示：禁止ゾーンの中まで入って"
+ },
+ {
+  "clip": "raw/S4_reject.mp4",
+  "ss": 78.5,
+  "to": 83.9,
+  "caption": "LLM推論 77秒（待機を省略） → 拒否（実行しない）"
+ },
+ {
+  "card": "cards/03_results.png",
+  "secs": 12
+ },
+ {
+  "card": "cards/04_ending.png",
+  "secs": 12
+ }
+]

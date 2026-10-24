@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+run/
+logs/
+ollama-models/
+*.tmp
+video/raw/
+video/out/
+video/contact/
+*.bak*
+report/out_review.pdf

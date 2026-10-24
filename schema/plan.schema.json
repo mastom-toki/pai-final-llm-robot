@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RobotPlan (generation schema)",
+  "description": "制約付き生成に渡す用。構造とenumだけを持ち、数値範囲や項目間の関係は持たせない(ソルバが if/then や minimum を無視しても壊れないため)。範囲・安全・意味の検証は Validator(コード)の責務。target の enum は landmarks.yaml から実行時に差し替える。LLMに expect は出させない(コード側で action から導く)。",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "steps"],
+      "properties": {
+        "status": { "const": "ok" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/step" }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "question"],
+      "properties": {
+        "status": { "const": "clarify" },
+        "question": { "type": "string", "maxLength": 200 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": { "const": "reject" },
+        "reason": { "type": "string", "maxLength": 200 }
+      }
+    }
+  ],
+  "$defs": {
+    "target": { "type": "string", "enum": ["PLACEHOLDER_FROM_LANDMARKS_YAML"] },
+    "step": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "target", "stop_distance_m"],
+          "properties": {
+            "action": { "const": "move_to" },
+            "target": { "$ref": "#/$defs/target" },
+            "stop_distance_m": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "target"],
+          "properties": {
+            "action": { "const": "rotate_to_face" },
+            "target": { "$ref": "#/$defs/target" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "angle_deg"],
+          "properties": {
+            "action": { "const": "rotate" },
+            "angle_deg": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "seconds"],
+          "properties": {
+            "action": { "const": "wait" },
+            "seconds": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {
+            "action": { "const": "stop" }
+          }
+        }
+      ]
+    }
+  }
+}

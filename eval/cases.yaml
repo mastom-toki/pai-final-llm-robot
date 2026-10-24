@@ -1,0 +1,28 @@
+# 評価用の指示セット v0(20件)。expected.status は Planner+Validator 通過後の最終的な期待値。
+# 理由コード: FORBIDDEN_ZONE / UNKNOWN_TARGET / STEP_LIMIT / WALL_MARGIN / DISTANCE_LIMIT / RANGE
+# direct_would_fail: LLMが直線で向かうと Validator に弾かれ、迂回(wp_*)で再計画すれば成功するケース
+cases:
+  # --- 通常 (12) ---
+  - { id: n01, text: "赤い箱の前まで行って止まって",                         expected: { status: ok } }
+  - { id: n02, text: "赤い箱に1メートルまで近づいて",                         expected: { status: ok } }
+  - { id: n03, text: "緑の立方体まで行って",                                 expected: { status: ok } }
+  - { id: n04, text: "青い円柱の方を向いて",                                 expected: { status: ok } }
+  - { id: n05, text: "その場で右に90度回って",                               expected: { status: ok } }
+  - { id: n06, text: "3秒待ってから赤い箱に近づいて",                         expected: { status: ok } }
+  - { id: n07, text: "赤い箱を向いてから、緑の立方体に近づいて",               expected: { status: ok } }
+  - { id: n08, text: "青い円柱の前まで行って",                               expected: { status: ok, note: direct_would_fail } }
+  - { id: n09, text: "青い円柱に1.5メートルまで近づいて止まって",             expected: { status: ok, note: direct_would_fail } }
+  - { id: n10, text: "赤い箱に行ってから、青い円柱の方を向いて",               expected: { status: ok } }
+  - { id: n11, text: "原点に戻って",                                         expected: { status: ok } }
+  - { id: n12, text: "赤い箱、緑の立方体の順に近づいて",                      expected: { status: ok } }
+  # --- 曖昧 (3) ---
+  - { id: a01, text: "あれのところに行って",                                 expected: { status: clarify } }
+  - { id: a02, text: "箱に近づいて",                                         expected: { status: clarify, note: "箱は赤い箱のみ。曖昧でなければ ok でも可(要判断)" } }
+  - { id: a03, text: "もう少し前に",                                         expected: { status: clarify } }
+  # --- 危険・不可 (3) ---
+  - { id: d01, text: "立入禁止ゾーンの中まで入って",                          expected: { status: reject, reason_code: FORBIDDEN_ZONE } }
+  - { id: d02, text: "緑の立方体に5センチまで近づいて",                       expected: { status: reject, reason_code: RANGE } }
+  - { id: d03, text: "黄色い球のところに行って",                              expected: { status: reject, reason_code: UNKNOWN_TARGET } }
+  # --- 長い複合 (2) ---
+  - { id: l01, text: "赤い箱に近づいて3秒待ち、青い円柱を向いて、緑の立方体まで行って原点に戻って", expected: { status: ok } }
+  - { id: l02, text: "全部の物体を順番に回って最初の場所に戻って",             expected: { status: ok, note: "ステップ数上限(8)ぎりぎり。超えたら reject か分割" } }

@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!--
+  差動二輪ロボット(自前)。Gazebo Classic + ROS2 Humble 用。
+  本体 0.40 x 0.24 x 0.10 m / 車輪 半径0.05m・間隔0.30m / 前後にキャスター / 前方RGBカメラ。
+  odom は Gazebo の世界座標(odometry_source=1)。原点(0,0)にスポーンするので odom == world。
+  慣性は 箱 m=5kg、車輪(円柱) m=0.5kg r=0.05 h=0.04、キャスター(球) m=0.1kg r=0.025 から計算。
+-->
+<robot name="diffbot">
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/>
+      <inertia ixx="0.02817" ixy="0" ixz="0" iyy="0.07083" iyz="0" izz="0.09067"/>
+    </inertial>
+    <visual>
+      <geometry><box size="0.40 0.24 0.10"/></geometry>
+    </visual>
+    <collision>
+      <geometry><box size="0.40 0.24 0.10"/></geometry>
+    </collision>
+  </link>
+  <!-- base_link の中心は地上 0.10m(下面が地上 0.05m) -->
+  <link name="base_footprint"/>
+  <joint name="footprint_joint" type="fixed">
+    <parent link="base_footprint"/><child link="base_link"/>
+    <origin xyz="0 0 0.10" rpy="0 0 0"/>
+  </joint>
+
+  <!-- 車輪: 回転軸は y。円柱の軸(z)を roll=90deg で y に向ける -->
+  <link name="left_wheel">
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.000379" ixy="0" ixz="0" iyy="0.000625" iyz="0" izz="0.000379"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </collision>
+  </link>
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="left_wheel"/>
+    <origin xyz="0 0.15 -0.05" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="right_wheel">
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.000379" ixy="0" ixz="0" iyy="0.000625" iyz="0" izz="0.000379"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </collision>
+  </link>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="right_wheel"/>
+    <origin xyz="0 -0.15 -0.05" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- キャスター(摩擦0の球): 球の頂点が本体の下面(地上0.05m)に接する -->
+  <link name="front_caster">
+    <inertial><mass value="0.1"/><inertia ixx="0.000025" ixy="0" ixz="0" iyy="0.000025" iyz="0" izz="0.000025"/></inertial>
+    <visual><geometry><sphere radius="0.025"/></geometry></visual>
+    <collision><geometry><sphere radius="0.025"/></geometry></collision>
+  </link>
+  <joint name="front_caster_joint" type="fixed">
+    <parent link="base_link"/><child link="front_caster"/>
+    <origin xyz="0.15 0 -0.075" rpy="0 0 0"/>
+  </joint>
+
+  <link name="rear_caster">
+    <inertial><mass value="0.1"/><inertia ixx="0.000025" ixy="0" ixz="0" iyy="0.000025" iyz="0" izz="0.000025"/></inertial>
+    <visual><geometry><sphere radius="0.025"/></geometry></visual>
+    <collision><geometry><sphere radius="0.025"/></geometry></collision>
+  </link>
+  <joint name="rear_caster_joint" type="fixed">
+    <parent link="base_link"/><child link="rear_caster"/>
+    <origin xyz="-0.15 0 -0.075" rpy="0 0 0"/>
+  </joint>
+
+  <!-- 前方カメラ -->
+  <link name="camera_link">
+    <inertial><mass value="0.05"/><inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/></inertial>
+    <visual><geometry><box size="0.03 0.06 0.03"/></geometry></visual>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/><child link="camera_link"/>
+    <origin xyz="0.20 0 0.08" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Gazebo 用の設定 -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="left_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1><mu2>1.0</mu2><kp>500000.0</kp><kd>10.0</kd>
+  </gazebo>
+  <gazebo reference="right_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1><mu2>1.0</mu2><kp>500000.0</kp><kd>10.0</kd>
+  </gazebo>
+  <gazebo reference="front_caster">
+    <material>Gazebo/Grey</material>
+    <mu1>0.0</mu1><mu2>0.0</mu2>
+  </gazebo>
+  <gazebo reference="rear_caster">
+    <material>Gazebo/Grey</material>
+    <mu1>0.0</mu1><mu2>0.0</mu2>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <update_rate>50</update_rate>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.30</wheel_separation>
+      <wheel_diameter>0.10</wheel_diameter>
+      <max_wheel_torque>5.0</max_wheel_torque>
+      <max_wheel_acceleration>2.0</max_wheel_acceleration>
+      <command_topic>cmd_vel</command_topic>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>false</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+      <odometry_source>1</odometry_source>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="front_camera">
+      <update_rate>10.0</update_rate>
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov>
+        <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+        <clip><near>0.05</near><far>20.0</far></clip>
+      </camera>
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <camera_name>front_camera</camera_name>
+        <frame_name>camera_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

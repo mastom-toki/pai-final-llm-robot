@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- 自動生成: sim/tools/gen_world.py (landmarks.yaml が出典。直接編集しない) -->
+<sdf version="1.6">
+  <world name="pai_world">
+    <include><uri>model://sun</uri></include>
+    <include><uri>model://ground_plane</uri></include>
+    <physics type="ode">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+    </physics>
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros><namespace>/gazebo</namespace></ros>
+      <update_rate>1.0</update_rate>
+    </plugin>
+    <gui><camera name="user_camera"><pose>0 -11 10 0 0.8 1.5708</pose></camera></gui>
+    <model name='wall_n'><static>true</static><pose>0 6.05 0.25 0 0 0</pose><link name='l'><collision name='c'><geometry><box><size>12.2 0.1 0.5</size></box></geometry></collision><visual name='v'><geometry><box><size>12.2 0.1 0.5</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual></link></model>
+    <model name='wall_s'><static>true</static><pose>0 -6.05 0.25 0 0 0</pose><link name='l'><collision name='c'><geometry><box><size>12.2 0.1 0.5</size></box></geometry></collision><visual name='v'><geometry><box><size>12.2 0.1 0.5</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual></link></model>
+    <model name='wall_e'><static>true</static><pose>6.05 0 0.25 0 0 0</pose><link name='l'><collision name='c'><geometry><box><size>0.1 12.2 0.5</size></box></geometry></collision><visual name='v'><geometry><box><size>0.1 12.2 0.5</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual></link></model>
+    <model name='wall_w'><static>true</static><pose>-6.05 0 0.25 0 0 0</pose><link name='l'><collision name='c'><geometry><box><size>0.1 12.2 0.5</size></box></geometry></collision><visual name='v'><geometry><box><size>0.1 12.2 0.5</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Grey</name></script></material></visual></link></model>
+    <model name='red_box'><pose>-3.0 2.5 0.2 0 0 0</pose><link name='l'><inertial><mass>10.0</mass><inertia><ixx>0.2667</ixx><iyy>0.2667</iyy><izz>0.2667</izz></inertia></inertial><collision name='c'><geometry><box><size>0.4 0.4 0.4</size></box></geometry></collision><visual name='v'><geometry><box><size>0.4 0.4 0.4</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name></script></material></visual></link></model>
+    <model name='blue_cylinder'><pose>5.0 0.0 0.25 0 0 0</pose><link name='l'><inertial><mass>10.0</mass><inertia><ixx>0.3646</ixx><iyy>0.3646</iyy><izz>0.3125</izz></inertia></inertial><collision name='c'><geometry><cylinder><radius>0.25</radius><length>0.5</length></cylinder></geometry></collision><visual name='v'><geometry><cylinder><radius>0.25</radius><length>0.5</length></cylinder></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Blue</name></script></material></visual></link></model>
+    <model name='green_cube'><pose>-4.5 -5.0 0.2 0 0 0</pose><link name='l'><inertial><mass>10.0</mass><inertia><ixx>0.2667</ixx><iyy>0.2667</iyy><izz>0.2667</izz></inertia></inertial><collision name='c'><geometry><box><size>0.4 0.4 0.4</size></box></geometry></collision><visual name='v'><geometry><box><size>0.4 0.4 0.4</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Green</name></script></material></visual></link></model>
+    <model name='wp_north'><static>true</static><pose>2.0 3.5 0.005 0 0 0</pose><link name='l'><visual name='v'><geometry><cylinder><radius>0.15</radius><length>0.01</length></cylinder></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Yellow</name></script></material></visual></link></model>
+    <model name='wp_south'><static>true</static><pose>2.0 -3.5 0.005 0 0 0</pose><link name='l'><visual name='v'><geometry><cylinder><radius>0.15</radius><length>0.01</length></cylinder></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Yellow</name></script></material></visual></link></model>
+    <model name='wp_origin'><static>true</static><pose>0.0 0.0 0.005 0 0 0</pose><link name='l'><visual name='v'><geometry><cylinder><radius>0.15</radius><length>0.01</length></cylinder></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Yellow</name></script></material></visual></link></model>
+    <model name='restricted_zone'><static>true</static><pose>2.0 0.0 0.005 0 0 0</pose><link name='l'><visual name='v'><geometry><box><size>1.0 3.0 0.01</size></box></geometry><material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/RedTransparent</name></script></material></visual></link></model>
+  </world>
+</sdf>

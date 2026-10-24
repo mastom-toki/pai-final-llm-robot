@@ -1,0 +1,22 @@
+# ワールド座標(m)。ロボット初期位置は (0, 0)、壁は x,y とも ±6 の正方形。
+# LLMには id / kind / color だけ渡し、座標は渡さない(座標は Validator/Executor が使う)。
+objects:
+  - { id: red_box,       kind: box,      color: red,   x: -3.0, y: 2.5 }   # ゾーンの反対側(直線で行ける)
+  - { id: blue_cylinder, kind: cylinder, color: blue,  x: 5.0,  y: 0.0 }   # 立入禁止ゾーンの向こう側
+  - { id: green_cube,    kind: cube,     color: green, x: -4.5, y: -5.0 }  # 壁際(壁まで 1.0m)
+waypoints:                     # LLMが迂回に使える経由点(move_to の target に指定可)
+  - { id: wp_north, x: 2.0,  y: 3.5 }
+  - { id: wp_south, x: 2.0,  y: -3.5 }
+  - { id: wp_origin, x: 0.0, y: 0.0 }
+forbidden_zones:               # 直線区間がこれと交差したら Validator が FORBIDDEN_ZONE で NG
+  - id: restricted_zone
+    polygon: [[1.5, -1.5], [2.5, -1.5], [2.5, 1.5], [1.5, 1.5]]
+limits:                        # Validator が検証(生成スキーマには入れない)
+  max_steps: 8
+  stop_distance_m: [0.4, 2.0]
+  angle_deg: [-180, 180]
+  wait_seconds: [0, 10]
+  wall_margin_m: 0.5           # 停止点から壁まで
+  max_total_distance_m: 30     # l02(全物体を回って戻る)の迂回込み最短が約27.5m
+  max_total_time_s: 150
+  max_replans: 2
