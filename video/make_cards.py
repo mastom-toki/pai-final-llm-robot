@@ -81,7 +81,7 @@ def pipeline():
 
 def results(rows, foot=None):
     img, d = canvas()
-    center(d, 70, "評価：未使用の指示20件（通常12・曖昧4・危険4）", font(52, True))
+    center(d, 70, "評価：指示20件×2集合（通常12・曖昧4・危険4）", font(52, True))
     f, fb = font(36), font(36, True)
     y = 230
     for label, val, ok in rows:
@@ -90,7 +90,7 @@ def results(rows, foot=None):
         y += 78
     if foot:
         center(d, 790, foot, font(28), (200, 190, 120))
-    center(d, 900, "n=20・実質単一サンプル（3シードの結果はほぼ同一）。評価集合は初回使用で、見てから調整していない。", font(28), SUB)
+    center(d, 900, "n=20・実質単一サンプル。集合Bはv3/v4の選択に使ったため、完全な未使用ではない。", font(28), SUB)
     img.save(os.path.join(OUT, "03_results.png"))
 
 
@@ -99,7 +99,7 @@ def ending():
     center(d, 250, "まとめ", font(70, True))
     lines = ["・LLMの提案は、検証を通ったものだけ実行する（禁止ゾーンを横切る計画は実行されない）",
              "・失敗は理由を返して再計画。指示そのものを変える違反は、黙って直さず実行しない",
-             "・計画1回は約40秒〜（CPU推論）。動画では待機を省略し、字幕で明記",
+             "・計画1回は約40〜110秒（CPU推論）。動画では待機を省略し、字幕で明記",
              "・限界：意味のない計画は検証層だけでは防げない（曖昧な指示の扱いが課題）"]
     y = 420
     for ln in lines:
